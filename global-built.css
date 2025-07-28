@@ -1,9 +1,9 @@
 :root {
-    --color: #0077e0;
+    --color: #0066CC;
 
     --swatch-10: color-mix(in srgb, var(--color), white 92%);
     --swatch-20: color-mix(in srgb, var(--color), white 80%);
-    --swatch-30: color-mix(in srgb, var(--color), white 60%);
+    --swatch-30: color-mix(in srgb, var(--color), white 64%);
     --swatch-40: color-mix(in srgb, var(--color), white 32%);
     --swatch-50: var(--color);
     --swatch-60: color-mix(in srgb, var(--color), black 24%);
@@ -208,9 +208,6 @@ main {
     gap: 48px 32px;
     max-width: 360px;
     width: 100%;
-    /* flex: 1 0 0;
-  align-self: stretch;
-  flex-wrap: wrap; */
 }
 
 .swatch {
@@ -273,25 +270,21 @@ main {
 .palette .swatch-10 {
     background-color: var(--swatch-10);
     color: black;
-    filter: hue-rotate(8);
 }
 
 .palette .swatch-20 {
     background-color: var(--swatch-20);
     color: black;
-    filter: hue-rotate(4);
 }
 
 .palette .swatch-30 {
     background-color: var(--swatch-30);
     color: black;
-    filter: hue-rotate(2);
 }
 
 .palette .swatch-40 {
     background-color: var(--swatch-40);
     color: black;
-    filter: hue-rotate(1);
 }
 
 .palette .swatch-50 {
@@ -302,25 +295,21 @@ main {
 .palette .swatch-60 {
     background-color: var(--swatch-60);
     color: white;
-    filter: hue-rotate(-1);
 }
 
 .palette .swatch-70 {
     background-color: var(--swatch-70);
     color: white;
-    filter: hue-rotate(-2);
 }
 
 .palette .swatch-80 {
     background-color: var(--swatch-80);
     color: white;
-    filter: hue-rotate(-4);
 }
 
 .palette .swatch-90 {
     background-color: var(--swatch-90);
     color: white;
-    filter: hue-rotate(-8);
 }
 
 @media (max-width: 1068px) {
