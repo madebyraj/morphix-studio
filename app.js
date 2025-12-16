@@ -2,78 +2,93 @@ const palette = document.getElementById("palette");
 const input = document.getElementById("colorInput");
 const toast = document.getElementById("toast");
 
-const lightScales = [0.956, 0.901, 0.807, 0.405, 0.200];
-const darkScales = [0.207, 0.402, 0.605, 0.800, 0.902];
+const lightSteps = [0.95, 0.90, 0.85, 0.80, 0.75, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20, 0.10, 0.05];
+const darkSteps = [0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95];
 
 function hexToRgb(hex) {
     hex = hex.replace("#", "");
-    const bigint = parseInt(hex, 16);
-    return [bigint >> 16 & 255, bigint >> 8 & 255, bigint & 255];
-}
-
-function rgbToHex(r, g, b) {
-    return "#" + [r, g, b].map(x => {
-        const h = x.toString(16);
-        return h.length === 1 ? "0" + h : h;
-    }).join("").toUpperCase();
-}
-
-function clamp(v) { return Math.max(0, Math.min(255, v)); }
-
-function lighten([r, g, b], f) {
+    const num = parseInt(hex, 16);
     return [
-        clamp(Math.round(r + (255 - r) * f)),
-        clamp(Math.round(g + (255 - g) * f)),
-        clamp(Math.round(b + (255 - b) * f))
+        (num >> 16) & 255,
+        (num >> 8) & 255,
+        num & 255
     ];
 }
 
-function darken([r, g, b], f) {
+function rgbToHex(r, g, b) {
+    return (
+        "#" +
+        [r, g, b]
+            .map(v => v.toString(16).padStart(2, "0"))
+            .join("")
+            .toUpperCase()
+    );
+}
+
+function clamp(v) {
+    return Math.max(0, Math.min(255, Math.round(v)));
+}
+
+function lightenByPercent([r, g, b], p) {
     return [
-        clamp(Math.round(r - r * f)),
-        clamp(Math.round(g - g * f)),
-        clamp(Math.round(b - b * f))
+        clamp(r + (255 - r) * p),
+        clamp(g + (255 - g) * p),
+        clamp(b + (255 - b) * p)
+    ];
+}
+
+function darkenByPercent([r, g, b], p) {
+    return [
+        clamp(r * (1 - p)),
+        clamp(g * (1 - p)),
+        clamp(b * (1 - p))
     ];
 }
 
 function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        showToast();
-    }).catch(err => {
-        console.error('Failed to copy:', err);
-    });
+    navigator.clipboard.writeText(text).then(showToast);
 }
 
 function showToast() {
-    toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 2000);
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2000);
 }
 
 function updatePalette(hex) {
     if (!/^#([0-9A-F]{3}){1,2}$/i.test(hex)) return;
-    const rgb = hexToRgb(hex);
+
+    const baseRgb = hexToRgb(hex);
     palette.innerHTML = "";
 
-    const lightVariants = lightScales.map(f => lighten(rgb, f));
-    const darkVariants = darkScales.map(f => darken(rgb, f));
-    const allVariants = [
+    const lightVariants = lightSteps.map(p =>
+        lightenByPercent(baseRgb, p)
+    );
+
+    const darkVariants = darkSteps.map(p =>
+        darkenByPercent(baseRgb, p)
+    );
+
+    const allColors = [
         ...lightVariants,
-        rgb,
+        baseRgb,
         ...darkVariants
     ];
 
-    allVariants.forEach(rgbVal => {
-        const newHex = rgbToHex(...rgbVal);
+    allColors.forEach(rgb => {
+        const hexVal = rgbToHex(...rgb);
         const box = document.createElement("div");
+
         box.className = "color-box";
-        box.style.backgroundColor = newHex;
-        box.innerHTML = `<code>${newHex}</code>`;
-        box.addEventListener("click", () => copyToClipboard(newHex));
+        box.style.backgroundColor = hexVal;
+        box.innerHTML = `<code>${hexVal}</code>`;
+        box.onclick = () => copyToClipboard(hexVal);
+
         palette.appendChild(box);
     });
 }
 
-input.addEventListener("input", e => updatePalette(e.target.value.trim()));
+input.addEventListener("input", e =>
+    updatePalette(e.target.value.trim())
+);
+
 updatePalette(input.value);
