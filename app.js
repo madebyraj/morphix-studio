@@ -2,8 +2,8 @@ const palette = document.getElementById("palette");
 const input = document.getElementById("colorInput");
 const toast = document.getElementById("toast");
 
-const lightSteps = [0.95, 0.90, 0.85, 0.80, 0.75, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20, 0.10, 0.05];
-const darkSteps = [0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95];
+const lightSteps = [0.963, 0.922, 0.840, 0.504];
+const darkSteps = [0.236, 0.545, 0.695, 0.853];
 
 function hexToRgb(hex) {
     hex = hex.replace("#", "");
